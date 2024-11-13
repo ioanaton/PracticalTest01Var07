@@ -1,6 +1,10 @@
 package ro.pub.cs.systems.eim.practicaltest01var07
+
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,8 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 class PracticalTest01Var07MainActivity : AppCompatActivity() {
 
+
     private var sumResult: Int = 0
     private var productResult: Int = 1
+
+    private lateinit var receiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +26,34 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
 
         val btnSet: Button = findViewById(R.id.btnSet)
 
+        // Pornim serviciul atunci când activitatea este creată
+        val serviceIntent = Intent(this, PracticalTest01Var07Service::class.java)
+        startService(serviceIntent)
+
+        // Definim un receiver pentru a asculta mesajele de difuzare
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val value1 = intent.getIntExtra("value1", 0)
+                val value2 = intent.getIntExtra("value2", 0)
+                val value3 = intent.getIntExtra("value3", 0)
+                val value4 = intent.getIntExtra("value4", 0)
+
+                // Suprascriem câmpurile text cu valorile primite
+                findViewById<EditText>(R.id.editText1).setText(value1.toString())
+                findViewById<EditText>(R.id.editText2).setText(value2.toString())
+                findViewById<EditText>(R.id.editText3).setText(value3.toString())
+                findViewById<EditText>(R.id.editText4).setText(value4.toString())
+
+                // Afișăm un Toast ca feedback
+                Toast.makeText(this@PracticalTest01Var07MainActivity, "Values Updated", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Înregistrăm receiver-ul pentru a asculta mesajele de difuzare
+        val filter = IntentFilter("com.example.yourapp.UPDATE_VALUES")
+        registerReceiver(receiver, filter)
+
+        // Setăm ascultătorul pentru butonul "Set"
         btnSet.setOnClickListener {
             // Extragem valorile și ignorăm câmpurile goale
             val values = listOf(
@@ -28,11 +63,12 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
                 findViewById<EditText>(R.id.editText4).text.toString().toIntOrNull()
             )
 
+            // Verificăm dacă cel puțin unul dintre câmpuri conține un număr
             if (values.any { it != null }) {
-                // Creăm intentul și adăugăm doar valorile care nu sunt null
+                // Creăm intentul pentru a porni SecondaryActivity
                 val intent = Intent(this, PracticalTest01Var07SecondaryActivity::class.java)
                 values.forEachIndexed { index, value ->
-                    intent.putExtra("EXTRA_VALUE_$index", value)
+                    value?.let { intent.putExtra("EXTRA_VALUE_$index", it) }
                 }
                 startActivityForResult(intent, 1)
             } else {
@@ -66,7 +102,6 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
         outState.putInt("PRODUCT_RESULT", productResult)
     }
 
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         sumResult = savedInstanceState.getInt("SUM_RESULT", 0)
@@ -76,4 +111,13 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Restored Sum: $sumResult, Product: $productResult", Toast.LENGTH_LONG).show()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // Oprim serviciul atunci când activitatea este distrusă
+        stopService(Intent(this, PracticalTest01Var07Service::class.java))
+
+        // Anulăm înregistrarea receiver-ului
+        unregisterReceiver(receiver)
+    }
 }
