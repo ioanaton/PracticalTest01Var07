@@ -1,4 +1,4 @@
-<!-- res/layout/activity_main.xml -->
+<!-- res/layout/activity_secondary.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,43 +11,51 @@
         android:stretchColumns="1">
 
         <TableRow>
-            <EditText
-                android:id="@+id/editText1"
+            <TextView
+                android:id="@+id/txtValue1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Field 1" />
+                android:text="0" />
 
-            <EditText
-                android:id="@+id/editText2"
+            <TextView
+                android:id="@+id/txtValue2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Field 2" />
+                android:text="0" />
         </TableRow>
 
         <TableRow>
-            <EditText
-                android:id="@+id/editText3"
+            <TextView
+                android:id="@+id/txtValue3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Field 3" />
+                android:text="0" />
 
-            <EditText
-                android:id="@+id/editText4"
+            <TextView
+                android:id="@+id/txtValue4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Field 4" />
+                android:text="0" />
         </TableRow>
     </TableLayout>
 
     <Button
-        android:id="@+id/btnSet"
+        android:id="@+id/btnSum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set"
+        android:text="Sum"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Product"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp" />
 
