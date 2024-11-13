@@ -12,18 +12,33 @@ class PracticalTest01Var07SecondaryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_secondary)
 
-        val value1 = intent.getIntExtra("EXTRA_VALUE_1", 0)
-        val value2 = intent.getIntExtra("EXTRA_VALUE_2", 0)
-        val value3 = intent.getIntExtra("EXTRA_VALUE_3", 0)
-        val value4 = intent.getIntExtra("EXTRA_VALUE_4", 0)
+        // Extragem valorile din Intent și le plasăm în TextViews
+        val values = listOf(
+            intent.getIntExtra("EXTRA_VALUE_0", Int.MIN_VALUE),
+            intent.getIntExtra("EXTRA_VALUE_1", Int.MIN_VALUE),
+            intent.getIntExtra("EXTRA_VALUE_2", Int.MIN_VALUE),
+            intent.getIntExtra("EXTRA_VALUE_3", Int.MIN_VALUE)
+        )
 
-        findViewById<TextView>(R.id.txtValue1).text = value1.toString()
-        findViewById<TextView>(R.id.txtValue2).text = value2.toString()
-        findViewById<TextView>(R.id.txtValue3).text = value3.toString()
-        findViewById<TextView>(R.id.txtValue4).text = value4.toString()
+        // Populăm câmpurile TextView corespunzătoare
+        val textFields = listOf(
+            findViewById<TextView>(R.id.txtValue1),
+            findViewById<TextView>(R.id.txtValue2),
+            findViewById<TextView>(R.id.txtValue3),
+            findViewById<TextView>(R.id.txtValue4)
+        )
 
+        values.forEachIndexed { index, value ->
+            if (value != Int.MIN_VALUE) {
+                textFields[index].text = value.toString()
+            } else {
+                textFields[index].text = ""
+            }
+        }
+
+        // Calculăm suma și produsul ignorând câmpurile goale
         findViewById<Button>(R.id.btnSum).setOnClickListener {
-            val sum = value1 + value2 + value3 + value4
+            val sum = values.filter { it != Int.MIN_VALUE }.sum()
             val resultIntent = Intent()
             resultIntent.putExtra("EXTRA_RESULT", sum)
             setResult(Activity.RESULT_OK, resultIntent)
@@ -31,7 +46,7 @@ class PracticalTest01Var07SecondaryActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnProduct).setOnClickListener {
-            val product = value1 * value2 * value3 * value4
+            val product = values.filter { it != Int.MIN_VALUE }.fold(1) { acc, i -> acc * i }
             val resultIntent = Intent()
             resultIntent.putExtra("EXTRA_RESULT", product)
             setResult(Activity.RESULT_OK, resultIntent)
