@@ -66,6 +66,7 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
         outState.putInt("PRODUCT_RESULT", productResult)
     }
 
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         sumResult = savedInstanceState.getInt("SUM_RESULT", 0)

@@ -12,6 +12,7 @@ class PracticalTest01Var07SecondaryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_secondary)
 
+
         // Extragem valorile din Intent și le plasăm în TextViews
         val values = listOf(
             intent.getIntExtra("EXTRA_VALUE_0", Int.MIN_VALUE),
